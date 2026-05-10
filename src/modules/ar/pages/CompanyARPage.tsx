@@ -10,6 +10,7 @@ import { TrackingTimeline } from '../../tracking/components/TrackingTimeline'
 import { TrackingUpdateModal } from '../../tracking/components/TrackingUpdateModal'
 import type { TrackingEventStatus } from '../../tracking/constants/trackingStatus'
 import { fetchTracking, updateTracking } from '../../tracking/store/trackingSlice'
+import { AIInsightsPanel } from '../../ai/components/AIInsightsPanel'
 import { EmailThread } from '../../email/components/EmailThread'
 import { ARStatusTag } from '../components/ARStatusTag'
 import { CompanyMergedPdfSection } from '../components/CompanyMergedPdfSection'
@@ -85,6 +86,7 @@ export function CompanyARPage() {
   }, [canonicalArId, groups])
 
   const trackingArId = group?.trackingEntryId ?? canonicalArId ?? ''
+
   const trackingData = trackingArId ? byArId[trackingArId] : undefined
   const trackingLoading = trackingArId ? Boolean(loadingByArId[trackingArId]) : false
 
@@ -275,6 +277,24 @@ export function CompanyARPage() {
                         pagination={{ pageSize: 12, showSizeChanger: false }}
                         scroll={{ x: 900 }}
                       />
+                    </div>
+                  ),
+                },
+                {
+                  key: 'insights',
+                  label: t('companyPage.tabInsights'),
+                  children: (
+                    <div className="space-y-4 pt-2">
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        {t('companyPage.insightsTabHint')}
+                      </p>
+                      {trackingArId ? (
+                        <div className="rounded-lg border border-neutral-200 bg-neutral-50/90 px-4 py-4 dark:border-neutral-700 dark:bg-neutral-900/60">
+                          <AIInsightsPanel anchorArId={trackingArId} embedded />
+                        </div>
+                      ) : (
+                        <Alert type="info" showIcon message={t('companyPage.insightsNoAnchorId')} />
+                      )}
                     </div>
                   ),
                 },

@@ -100,6 +100,9 @@ export default {
     cancel: 'Cancelar',
     merchantId: 'ID de comercio',
     outletId: 'ID de punto de venta',
+    presetMerchantOutlet: 'Comercio y punto de venta',
+    presetPlaceholder: 'Seleccione comercio y punto de venta',
+    invalidPreset: 'Selección de comercio / punto de venta no válida.',
     merchantIdPlaceholder: 'ObjectId hexadecimal de 24 caracteres',
     outletIdPlaceholder: 'ObjectId hexadecimal de 24 caracteres',
     fieldRequired: 'Este campo es obligatorio',
@@ -121,6 +124,11 @@ export default {
     amountTotal: 'Total {{amount}}',
     tabTracking: 'Seguimiento',
     tabPosting: 'Fecha de registro',
+    tabInsights: 'Información IA',
+    insightsTabHint:
+      'Usa el mismo id de factura ancla que el seguimiento (POST /api/v1/ai/analyze/ar/:arId). El servidor carga toda la cohorte del cliente.',
+    insightsNoAnchorId:
+      'Sin id AR ancla válido — el análisis IA requiere un ObjectId de 24 caracteres.',
     tabEmail: 'Correo',
     emailTabHint:
       'Usa la misma factura representativa que el seguimiento. Abra una factura en Fecha de registro si necesita ese hilo.',
@@ -192,7 +200,7 @@ export default {
     lastTrackingUpdate: 'Última actualización de seguimiento',
     updateTracking: 'Actualizar seguimiento',
     trackingAtCompanyHint:
-      'Seguimiento, PDF fusionado, fechas de registro y el hilo de correo están en la página de empresa — use Ver junto a la empresa en Entradas AR.',
+      'Seguimiento, PDF fusionado, fechas de registro, información IA y el hilo de correo están en la página de empresa — use Ver junto a la empresa en Entradas AR.',
   },
   tracking: {
     sectionTitle: 'Línea de tiempo de seguimiento',
@@ -264,6 +272,25 @@ export default {
       'Mensaje de ejemplo: el servidor aún no devolvió correos para esta entrada AR.',
     placeholderFrom: '[Su nombre]',
     placeholderSubject: 'Seguimiento de facturas pendientes',
+  },
+  aiInsights: {
+    title: 'Información IA',
+    refresh: 'Actualizar',
+    empty: 'Aún no hay análisis para esta empresa de facturación.',
+    runAnalysis: 'Ejecutar análisis',
+    currentStatus: 'Estado actual',
+    riskLevel: 'Nivel de riesgo',
+    customerIntent: 'Intención del cliente',
+    paymentLikelihood: 'Probabilidad de pago',
+    summary: 'Resumen',
+    summaryFallback: 'No se devolvió un resumen en esta ejecución.',
+    recommendedActionTitle: 'Acción recomendada',
+    successToast: 'Análisis completado',
+    errorToast: 'No se pudo ejecutar el análisis',
+    sourceAi: 'Modelo IA',
+    sourceFallback: 'Respaldo determinista',
+    persisted: 'Guardado en filas AR',
+    cohortHint: 'El servidor analizó {{count}} factura(s) en esta cohorte.',
   },
   arStatus: {
     PENDING: 'Pendiente',

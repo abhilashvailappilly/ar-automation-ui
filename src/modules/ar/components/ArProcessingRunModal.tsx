@@ -1,9 +1,8 @@
-import { Form, Input, Modal, message } from 'antd'
-import { useEffect, useState } from 'react'
+import { Form, Input, Modal, Select, message } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ArTriggerRunPayload } from '../api/arApi.types'
-
-const OBJECT_ID_PATTERN = /^[a-fA-F0-9]{24}$/
+import { RUN_AR_PROCESSING_PRESETS, findRunArPresetByKey } from '../constants/runArProcessingPresets'
 
 interface ArProcessingRunModalProps {
   open: boolean
@@ -12,8 +11,7 @@ interface ArProcessingRunModalProps {
 }
 
 interface FormValues {
-  merchantId: string
-  outletId: string
+  presetKey: string
   fromDate?: string
   toDate?: string
 }
@@ -37,10 +35,24 @@ export function ArProcessingRunModal({ open, onClose, onSubmit }: ArProcessingRu
   const [form] = Form.useForm<FormValues>()
   const [submitting, setSubmitting] = useState(false)
 
+  const presetOptions = useMemo(
+    () =>
+      RUN_AR_PROCESSING_PRESETS.map((p) => ({
+        value: p.key,
+        label: `${p.merchantDisplayName} — ${p.outletDisplayName}`,
+      })),
+    [],
+  )
+
+  const defaultPresetKey = RUN_AR_PROCESSING_PRESETS[0]?.key ?? ''
+
   useEffect(() => {
     if (!open) return
     form.resetFields()
-  }, [open, form])
+    if (defaultPresetKey) {
+      form.setFieldsValue({ presetKey: defaultPresetKey })
+    }
+  }, [open, form, defaultPresetKey])
 
   const handleOk = async () => {
     let values: FormValues
@@ -60,9 +72,15 @@ export function ArProcessingRunModal({ open, onClose, onSubmit }: ArProcessingRu
     const fromIso = dateInputToIsoStartOfDay(values.fromDate)
     const toIso = dateInputToIsoEndOfDay(values.toDate)
 
+    const preset = findRunArPresetByKey(values.presetKey.trim())
+    if (!preset) {
+      message.error(t('arRun.invalidPreset'))
+      return
+    }
+
     const payload: ArTriggerRunPayload = {
-      merchantId: values.merchantId.trim(),
-      outletId: values.outletId.trim(),
+      merchantId: preset.merchantId,
+      outletId: preset.outletId,
       ...(fromIso ? { fromDate: fromIso } : {}),
       ...(toIso ? { toDate: toIso } : {}),
     }
@@ -92,30 +110,16 @@ export function ArProcessingRunModal({ open, onClose, onSubmit }: ArProcessingRu
       <p className="mb-4 text-sm text-neutral-500 dark:text-neutral-400">{t('arRun.modalHint')}</p>
       <Form form={form} layout="vertical" autoComplete="off">
         <Form.Item
-          name="merchantId"
-          label={t('arRun.merchantId')}
-          rules={[
-            { required: true, message: t('arRun.fieldRequired') },
-            {
-              pattern: OBJECT_ID_PATTERN,
-              message: t('arRun.invalidObjectId'),
-            },
-          ]}
+          name="presetKey"
+          label={t('arRun.presetMerchantOutlet')}
+          rules={[{ required: true, message: t('arRun.fieldRequired') }]}
         >
-          <Input placeholder={t('arRun.merchantIdPlaceholder')} spellCheck={false} />
-        </Form.Item>
-        <Form.Item
-          name="outletId"
-          label={t('arRun.outletId')}
-          rules={[
-            { required: true, message: t('arRun.fieldRequired') },
-            {
-              pattern: OBJECT_ID_PATTERN,
-              message: t('arRun.invalidObjectId'),
-            },
-          ]}
-        >
-          <Input placeholder={t('arRun.outletIdPlaceholder')} spellCheck={false} />
+          <Select
+            options={presetOptions}
+            placeholder={t('arRun.presetPlaceholder')}
+            optionFilterProp="label"
+            showSearch
+          />
         </Form.Item>
         <Form.Item label={t('arRun.dateRangeLabel')}>
           <div className="flex flex-wrap items-center gap-3">

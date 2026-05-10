@@ -100,6 +100,9 @@ export default {
     cancel: 'Cancel',
     merchantId: 'Merchant ID',
     outletId: 'Outlet ID',
+    presetMerchantOutlet: 'Merchant & outlet',
+    presetPlaceholder: 'Select merchant and outlet',
+    invalidPreset: 'Invalid merchant / outlet selection.',
     merchantIdPlaceholder: '24-character hex ObjectId',
     outletIdPlaceholder: '24-character hex ObjectId',
     fieldRequired: 'This field is required',
@@ -121,6 +124,11 @@ export default {
     amountTotal: 'Total {{amount}}',
     tabTracking: 'Tracking',
     tabPosting: 'Posting date',
+    tabInsights: 'AI insights',
+    insightsTabHint:
+      'Summary of the customer\'s intent and payment likelihood.',
+    insightsNoAnchorId:
+      'No valid anchor AR id for this group — AI analysis requires a 24-character invoice row id.',
     tabEmail: 'Email',
     emailTabHint:
       'Uses the same representative invoice row as tracking. Open an individual invoice from Posting date if you need that thread.',
@@ -191,7 +199,7 @@ export default {
     lastTrackingUpdate: 'Last tracking update',
     updateTracking: 'Update tracking',
     trackingAtCompanyHint:
-      'Tracking, merged PDF, posting-date listing, and the email thread are on the company page — use View next to the company on AR Entries.',
+      'Tracking, merged PDF, posting date, AI insights, and the email thread are on the company page — use View next to the company on AR Entries.',
   },
   tracking: {
     sectionTitle: 'Tracking timeline',
@@ -263,6 +271,25 @@ export default {
       'Sample message shown because the server returned no emails for this AR entry yet.',
     placeholderFrom: '[Your Name]',
     placeholderSubject: 'Follow-up on outstanding invoices',
+  },
+  aiInsights: {
+    title: 'AI Insights',
+    refresh: 'Refresh',
+    empty: 'No analysis for this billing company yet.',
+    runAnalysis: 'Run analysis',
+    currentStatus: 'Current status',
+    riskLevel: 'Risk level',
+    customerIntent: 'Customer intent',
+    paymentLikelihood: 'Payment likelihood',
+    summary: 'Summary',
+    summaryFallback: 'No summary returned for this run.',
+    recommendedActionTitle: 'Recommended action',
+    successToast: 'Analysis completed',
+    errorToast: 'Could not run analysis',
+    sourceAi: 'AI model',
+    sourceFallback: 'Deterministic fallback',
+    persisted: 'Saved to AR rows',
+    cohortHint: 'Server analyzed {{count}} invoice row(s) in this customer cohort.',
   },
   arStatus: {
     PENDING: 'Pending',

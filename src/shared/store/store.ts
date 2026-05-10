@@ -4,6 +4,7 @@ import arReducer from '../../modules/ar/store/arSlice'
 import companyReducer from '../../modules/company/store/companySlice'
 import trackingReducer from '../../modules/tracking/store/trackingSlice'
 import emailReducer from '../../modules/email/store/emailSlice'
+import aiReducer from '../../modules/ai/store/aiSlice'
 import uiReducer from './uiSlice'
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     company: companyReducer,
     tracking: trackingReducer,
     email: emailReducer,
+    ai: aiReducer,
     ui: uiReducer,
   },
 })

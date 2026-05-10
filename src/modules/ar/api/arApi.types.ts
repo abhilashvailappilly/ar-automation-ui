@@ -75,6 +75,8 @@ export interface ArListApiResponse extends ArListMetaApi {
 
 export interface ArDetailApiResponse {
   entry: ArEntryApi
+  /** Present when ArAutomation `shapeAiInsights(entry.agentAnalysis)` is non-null. */
+  aiInsights?: ArAiInsightsApi | null
   missingDocuments: {
     checkCount: number
     checkNos: string[]
@@ -82,6 +84,21 @@ export interface ArDetailApiResponse {
   }
   confidenceScore: number
   finalPdfUrl?: string | null
+}
+
+/** Persisted AI snapshot from `entry.agentAnalysis.lastAnalysis` (detail list shape). */
+export interface ArAiInsightsApi {
+  updatedAt?: string | null
+  source?: string | null
+  currentStatus?: string | null
+  riskLevel?: string | null
+  customerIntent?: string | null
+  paymentLikelihood?: number | null
+  summary?: string | null
+  recommendedAction?: string | null
+  customerScope?: Record<string, unknown> | null
+  anchorArId?: string | null
+  generatedAt?: string | null
 }
 
 /** `POST /ar-entries/run` body — matches ArAutomation `triggerRun` validation. */
