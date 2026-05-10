@@ -121,6 +121,9 @@ export default {
     amountTotal: 'Total {{amount}}',
     tabTracking: 'Seguimiento',
     tabPosting: 'Fecha de registro',
+    tabEmail: 'Correo',
+    emailTabHint:
+      'Usa la misma factura representativa que el seguimiento. Abra una factura en Fecha de registro si necesita ese hilo.',
     colPostingDate: 'Fecha de registro',
     postingTabHint:
       'Ordenado por fecha de registro (fecha de negocio, luego factura / fiscal si existe). Use los encabezados para volver a ordenar.',
@@ -189,7 +192,7 @@ export default {
     lastTrackingUpdate: 'Última actualización de seguimiento',
     updateTracking: 'Actualizar seguimiento',
     trackingAtCompanyHint:
-      'Seguimiento, vista previa del PDF y fechas de registro están en la página de empresa — use Ver junto a la empresa en Entradas AR.',
+      'Seguimiento, PDF fusionado, fechas de registro y el hilo de correo están en la página de empresa — use Ver junto a la empresa en Entradas AR.',
   },
   tracking: {
     sectionTitle: 'Línea de tiempo de seguimiento',
@@ -249,6 +252,18 @@ export default {
     toneWordProfessional: 'profesional',
     toneWordFriendly: 'amistoso',
     toneWordFormal: 'formal',
+  },
+  emailThread: {
+    title: 'Conversación por correo',
+    sync: 'Sincronizar hilo',
+    refresh: 'Actualizar',
+    emptyDescription: 'No hay conversación por correo',
+    loadFailed: 'No se pudo cargar el hilo de correo',
+    intentLabel: 'Intención',
+    placeholderHint:
+      'Mensaje de ejemplo: el servidor aún no devolvió correos para esta entrada AR.',
+    placeholderFrom: '[Su nombre]',
+    placeholderSubject: 'Seguimiento de facturas pendientes',
   },
   arStatus: {
     PENDING: 'Pendiente',

@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Empty, Modal, Spin, Table, Tabs, message } from 'antd'
+import { Alert, Button, Empty, Modal, Spin, Table, Tabs, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +10,7 @@ import { TrackingTimeline } from '../../tracking/components/TrackingTimeline'
 import { TrackingUpdateModal } from '../../tracking/components/TrackingUpdateModal'
 import type { TrackingEventStatus } from '../../tracking/constants/trackingStatus'
 import { fetchTracking, updateTracking } from '../../tracking/store/trackingSlice'
+import { EmailThread } from '../../email/components/EmailThread'
 import { ARStatusTag } from '../components/ARStatusTag'
 import { CompanyMergedPdfSection } from '../components/CompanyMergedPdfSection'
 import { fetchAREntries } from '../store/arSlice'
@@ -274,6 +275,24 @@ export function CompanyARPage() {
                         pagination={{ pageSize: 12, showSizeChanger: false }}
                         scroll={{ x: 900 }}
                       />
+                    </div>
+                  ),
+                },
+                {
+                  key: 'email',
+                  label: t('companyPage.tabEmail'),
+                  children: (
+                    <div className="space-y-4 pt-2">
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        {t('companyPage.emailTabHint')}
+                      </p>
+                      {trackingArId ? (
+                        <div className="rounded-lg border border-neutral-200 bg-neutral-50/90 px-4 py-4 dark:border-neutral-700 dark:bg-neutral-900/60">
+                          <EmailThread arId={trackingArId} embedded />
+                        </div>
+                      ) : (
+                        <Alert type="info" showIcon message={t('arGrouped.trackingNoEntryId')} />
+                      )}
                     </div>
                   ),
                 },

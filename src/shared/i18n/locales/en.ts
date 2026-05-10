@@ -121,6 +121,9 @@ export default {
     amountTotal: 'Total {{amount}}',
     tabTracking: 'Tracking',
     tabPosting: 'Posting date',
+    tabEmail: 'Email',
+    emailTabHint:
+      'Uses the same representative invoice row as tracking. Open an individual invoice from Posting date if you need that thread.',
     colPostingDate: 'Posting date',
     postingTabHint:
       'Sorted by posting date (business date, then invoice / tax invoice date when present). Use column headers to re-sort.',
@@ -188,7 +191,7 @@ export default {
     lastTrackingUpdate: 'Last tracking update',
     updateTracking: 'Update tracking',
     trackingAtCompanyHint:
-      'Tracking, merged PDF preview, and posting-date listing are on the company page — use View next to the company on AR Entries.',
+      'Tracking, merged PDF, posting-date listing, and the email thread are on the company page — use View next to the company on AR Entries.',
   },
   tracking: {
     sectionTitle: 'Tracking timeline',
@@ -248,6 +251,18 @@ export default {
     toneWordProfessional: 'professional',
     toneWordFriendly: 'friendly',
     toneWordFormal: 'formal',
+  },
+  emailThread: {
+    title: 'Email Conversation',
+    sync: 'Sync thread',
+    refresh: 'Refresh',
+    emptyDescription: 'No email conversation found',
+    loadFailed: 'Could not load email thread',
+    intentLabel: 'Intent',
+    placeholderHint:
+      'Sample message shown because the server returned no emails for this AR entry yet.',
+    placeholderFrom: '[Your Name]',
+    placeholderSubject: 'Follow-up on outstanding invoices',
   },
   arStatus: {
     PENDING: 'Pending',
