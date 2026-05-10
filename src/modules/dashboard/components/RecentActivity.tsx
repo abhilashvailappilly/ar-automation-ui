@@ -1,13 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { formatCurrency } from '../../../shared/utils/formatCurrency'
 import { ARStatusTag } from '../../ar/components/ARStatusTag'
 import type { AREntry } from '../../ar/types/ar'
-
-function fmtMoney(n: number) {
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: 'USD',
-  }).format(n)
-}
 
 interface RecentActivityProps {
   entries: AREntry[]
@@ -27,7 +21,7 @@ export function RecentActivity({ entries }: RecentActivityProps) {
               <p className="truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
                 {row.invoiceNo}
               </p>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">{fmtMoney(row.amount)}</p>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">{formatCurrency(row.amount)}</p>
             </div>
             <ARStatusTag status={row.status} />
           </li>

@@ -4,18 +4,12 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../shared/store/hooks'
+import { formatCurrency } from '../../../shared/utils/formatCurrency'
 import { EmailDrawer } from '../components/EmailDrawer'
 import { ARStatusTag } from '../components/ARStatusTag'
 import { clearSelected, fetchARDetail } from '../store/arSlice'
 
 const EMAIL_ALLOWED_STATUSES = new Set(['PDF_GENERATED'])
-
-function fmtMoney(n: number) {
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: 'USD',
-  }).format(n)
-}
 
 function DocLine({
   label,
@@ -98,7 +92,10 @@ export function ARDetailPage() {
                     {row.invoiceNo}
                   </h1>
                   <p className="mt-2 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-                    {fmtMoney(row.amount)}
+                    {formatCurrency(row.amount)}
+                  </p>
+                  <p className="mt-3 max-w-lg text-xs text-neutral-500 dark:text-neutral-400">
+                    {t('arDetail.trackingAtCompanyHint')}
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-3 sm:min-w-[200px]">
@@ -123,7 +120,12 @@ export function ARDetailPage() {
             <section className="rounded-xl bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border dark:border-neutral-800 dark:bg-neutral-900">
               <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">{t('arDetail.pdf')}</h2>
               <div className="mt-4 flex flex-wrap gap-3">
-                <Button type="primary" onClick={() => setPdfOpen(true)}>
+                <Button
+                  type="primary"
+                  disabled={!row.pdfUrl}
+                  title={!row.pdfUrl ? t('arDetail.previewPdfUnavailable') : undefined}
+                  onClick={() => row.pdfUrl && setPdfOpen(true)}
+                >
                   {t('arDetail.previewPdf')}
                 </Button>
                 <Button
@@ -135,6 +137,9 @@ export function ARDetailPage() {
                   {t('arDetail.downloadPdf')}
                 </Button>
               </div>
+              <p className="mt-3 max-w-xl text-xs text-neutral-500 dark:text-neutral-400">
+                {t('arDetail.mergedPdfHint')}
+              </p>
             </section>
 
             <section className="rounded-xl bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border dark:border-neutral-800 dark:bg-neutral-900">
@@ -157,20 +162,19 @@ export function ARDetailPage() {
 
             <Modal
               title={t('arDetail.pdfPreviewTitle')}
-              open={pdfOpen}
+              open={pdfOpen && Boolean(row.pdfUrl)}
               onCancel={() => setPdfOpen(false)}
               footer={null}
               width={880}
               destroyOnHidden
             >
-              <iframe
-                title={t('arDetail.pdfIframeTitle')}
-                src={
-                  row.pdfUrl ??
-                  'https://www.w3.org/WAI/WCAG21/working-examples/pdf-note/note.pdf'
-                }
-                className="mt-2 h-[70vh] w-full rounded-lg border border-neutral-200 dark:border-neutral-700"
-              />
+              {row.pdfUrl ? (
+                <iframe
+                  title={t('arDetail.pdfIframeTitle')}
+                  src={row.pdfUrl}
+                  className="mt-2 h-[70vh] w-full rounded-lg border border-neutral-200 dark:border-neutral-700"
+                />
+              ) : null}
             </Modal>
 
             <EmailDrawer

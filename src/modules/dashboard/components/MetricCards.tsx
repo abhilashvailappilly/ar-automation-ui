@@ -1,19 +1,15 @@
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
-  DollarOutlined,
   FileSearchOutlined,
 } from '@ant-design/icons'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatCurrency } from '../../../shared/utils/formatCurrency'
 import type { AREntry } from '../../ar/types/ar'
 
-function fmtMoney(n: number) {
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(n)
+function RupeeIcon() {
+  return <span aria-hidden className="font-semibold leading-none">₹</span>
 }
 
 interface MetricCardsProps {
@@ -35,9 +31,9 @@ export function MetricCards({ entries }: MetricCardsProps) {
       {
         key: 'totalAr',
         title: t('metrics.totalArAmount'),
-        value: fmtMoney(totalAR),
+        value: formatCurrency(totalAR, { maximumFractionDigits: 0 }),
         trend: t('metrics.totalArTrend'),
-        icon: <DollarOutlined />,
+        icon: <RupeeIcon />,
         circle: 'bg-sky-100 text-sky-600',
       },
       {

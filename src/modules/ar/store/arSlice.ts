@@ -1,8 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api } from '../../../shared/api/client'
-import type { ArDetailApiResponse, ArListApiResponse } from '../api/arApi.types'
-import { mapDetailFromApi, mapEntryFromApi } from '../api/mapArFromApi'
-import type { ARDetail, AREntry } from '../types/ar'
+import { getApiErrorMessage } from '../../../shared/api/getApiErrorMessage'
+import type {
+  ArDetailApiResponse,
+  ArListApiResponse,
+  ArTriggerRunPayload,
+  ArTriggerRunResponse,
+} from '../api/arApi.types'
+import {
+  flattenCompanyGroups,
+  mapCompanyGroupFromApi,
+  mapDetailFromApi,
+} from '../api/mapArFromApi'
+import type { ARCompanyGroup, ARDetail, AREntry } from '../types/ar'
 
 export interface AREmailPayload {
   id: string
@@ -12,14 +22,29 @@ export interface AREmailPayload {
   to?: string
 }
 
+export interface ARListMeta {
+  /** Paginated identifier (company) bucket count from backend. */
+  total: number
+  /** Total AR row documents matching filters. */
+  arEntryCount: number
+  page: number
+  limit: number
+}
+
 interface ARState {
+  /** Company → guest → entries hierarchy from `GET /ar-entries`. */
+  groups: ARCompanyGroup[]
+  /** Flattened rows for charts and aggregate metrics. */
   list: AREntry[]
+  listMeta: ARListMeta | null
   selected: ARDetail | null
   loading: boolean
 }
 
 const initialState: ARState = {
+  groups: [],
   list: [],
+  listMeta: null,
   selected: null,
   loading: false,
 }
@@ -29,7 +54,18 @@ export const fetchAREntries = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get<ArListApiResponse>('/ar-entries')
-      return data.entries.map(mapEntryFromApi)
+      const groups = data.entries.map(mapCompanyGroupFromApi)
+      const list = flattenCompanyGroups(groups)
+      return {
+        groups,
+        list,
+        meta: {
+          total: data.total,
+          arEntryCount: data.arEntryCount,
+          page: data.page,
+          limit: data.limit,
+        } satisfies ARListMeta,
+      }
     } catch {
       return rejectWithValue('fetch_failed')
     }
@@ -44,6 +80,18 @@ export const fetchARDetail = createAsyncThunk(
       return mapDetailFromApi(data)
     } catch {
       return rejectWithValue('fetch_failed')
+    }
+  },
+)
+
+export const triggerArProcessingRun = createAsyncThunk(
+  'ar/triggerRun',
+  async (body: ArTriggerRunPayload, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post<ArTriggerRunResponse>('/ar-entries/run', body)
+      return data
+    } catch (e) {
+      return rejectWithValue(getApiErrorMessage(e, 'trigger_failed'))
     }
   },
 )
@@ -79,11 +127,15 @@ const arSlice = createSlice({
       })
       .addCase(fetchAREntries.fulfilled, (state, action) => {
         state.loading = false
-        state.list = action.payload
+        state.groups = action.payload.groups
+        state.list = action.payload.list
+        state.listMeta = action.payload.meta
       })
       .addCase(fetchAREntries.rejected, (state) => {
         state.loading = false
+        state.groups = []
         state.list = []
+        state.listMeta = null
       })
       .addCase(fetchARDetail.pending, (state) => {
         state.loading = true

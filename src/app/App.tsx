@@ -8,6 +8,8 @@ import { LoginPage } from '../modules/auth/pages/LoginPage'
 import { RegisterPage } from '../modules/auth/pages/RegisterPage'
 import { ARDetailPage } from '../modules/ar/pages/ARDetailPage'
 import { AREntriesPage } from '../modules/ar/pages/AREntriesPage'
+import { CompanyARPage } from '../modules/ar/pages/CompanyARPage'
+import { CompaniesPage } from '../modules/company/pages/CompaniesPage'
 import { DashboardPage } from '../modules/dashboard/pages/DashboardPage'
 import { DocumentsPage } from '../modules/documents/pages/DocumentsPage'
 import { SettingsPage } from '../modules/settings/pages/SettingsPage'
@@ -56,7 +58,9 @@ export default function App() {
             <Route element={<RequireAuth />}>
               <Route path="/" element={<RootLayout />}>
                 <Route index element={<DashboardPage />} />
+                <Route path="companies" element={<CompaniesPage />} />
                 <Route path="ar" element={<AREntriesPage />} />
+                <Route path="ar/company/:canonicalArId" element={<CompanyARPage />} />
                 <Route path="ar/:id" element={<ARDetailPage />} />
                 <Route path="documents" element={<DocumentsPage />} />
                 <Route path="analytics" element={<AnalyticsPage />} />

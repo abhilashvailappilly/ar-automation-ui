@@ -1,4 +1,5 @@
 import {
+  BankOutlined,
   BarChartOutlined,
   DashboardOutlined,
   FileSearchOutlined,
@@ -26,6 +27,7 @@ export function Sidebar() {
     () =>
       [
         { to: '/', icon: <DashboardOutlined />, labelKey: 'layout.dashboard', end: true },
+        { to: '/companies', icon: <BankOutlined />, labelKey: 'layout.companies', end: false },
         { to: '/ar', icon: <FileSearchOutlined />, labelKey: 'layout.arEntries', end: false },
         { to: '/documents', icon: <FolderOutlined />, labelKey: 'layout.documents', end: true },
         {

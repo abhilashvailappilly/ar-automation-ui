@@ -3,22 +3,18 @@ import type { ColumnsType } from 'antd/es/table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { formatCurrency } from '../../../shared/utils/formatCurrency'
 import type { AREntry } from '../types/ar'
 import { ARStatusTag } from './ARStatusTag'
-
-function fmtMoney(n: number) {
-  return new Intl.NumberFormat(undefined, {
-    style: 'currency',
-    currency: 'USD',
-  }).format(n)
-}
 
 interface ARTableProps {
   entries: AREntry[]
   loading?: boolean
+  /** Omit outer card and pagination when nested (e.g. inside grouped accordion). */
+  embedded?: boolean
 }
 
-export function ARTable({ entries, loading }: ARTableProps) {
+export function ARTable({ entries, loading, embedded }: ARTableProps) {
   const { t } = useTranslation()
 
   const columns: ColumnsType<AREntry> = useMemo(
@@ -46,7 +42,7 @@ export function ARTable({ entries, loading }: ARTableProps) {
         title: t('arTable.amount'),
         dataIndex: 'amount',
         key: 'amount',
-        render: (v: number) => fmtMoney(v),
+        render: (v: number) => formatCurrency(v),
       },
       {
         title: t('arTable.status'),
@@ -84,15 +80,26 @@ export function ARTable({ entries, loading }: ARTableProps) {
     [t],
   )
 
+  const table = (
+    <Table<AREntry>
+      rowKey={(record, index) => record.id || `row-${index}`}
+      loading={loading}
+      columns={columns}
+      dataSource={entries}
+      size={embedded ? 'small' : undefined}
+      pagination={
+        embedded ? false : { pageSize: 8, showSizeChanger: false }
+      }
+    />
+  )
+
+  if (embedded) {
+    return <div className="overflow-x-auto">{table}</div>
+  }
+
   return (
     <div className="rounded-xl bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border dark:border-neutral-800 dark:bg-neutral-900">
-      <Table<AREntry>
-        rowKey="id"
-        loading={loading}
-        columns={columns}
-        dataSource={entries}
-        pagination={{ pageSize: 8, showSizeChanger: false }}
-      />
+      {table}
     </div>
   )
 }

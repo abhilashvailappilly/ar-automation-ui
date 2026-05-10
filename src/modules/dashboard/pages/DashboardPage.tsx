@@ -1,7 +1,7 @@
 import { Spin } from 'antd'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ARTable } from '../../ar/components/ARTable'
+import { ARGroupedEntries } from '../../ar/components/ARGroupedEntries'
 import { AnalyticsChart } from '../../ar/components/AnalyticsChart'
 import { fetchAREntries } from '../../ar/store/arSlice'
 import { useAppDispatch, useAppSelector } from '../../../shared/store/hooks'
@@ -11,7 +11,7 @@ import { RecentActivity } from '../components/RecentActivity'
 export function DashboardPage() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { list, loading } = useAppSelector((s) => s.ar)
+  const { list, groups, loading } = useAppSelector((s) => s.ar)
 
   useEffect(() => {
     dispatch(fetchAREntries())
@@ -28,7 +28,7 @@ export function DashboardPage() {
         </p>
       </section>
 
-      <Spin spinning={loading && list.length === 0}>
+      <Spin spinning={loading && groups.length === 0}>
         <div className="space-y-6">
           <MetricCards entries={list} />
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -43,7 +43,7 @@ export function DashboardPage() {
             <h2 className="mb-4 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {t('dashboard.arEntriesHeading')}
             </h2>
-            <ARTable entries={list} loading={loading && list.length === 0} />
+            <ARGroupedEntries groups={groups} loading={loading} />
           </section>
         </div>
       </Spin>
